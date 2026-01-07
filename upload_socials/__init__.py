@@ -5,14 +5,34 @@ import pyautogui
 from optimisewait import optimiseWait
 import smartpaste
 
-def upload_youtube(filepath: str, title: str, image_path: str = None, description: str = None, channelurl: str = 'https://studio.youtube.com/', thumbnail: str = None, tags: str = None, monetization: bool = False):
+def upload_youtube(filepath: str, title: str, image_path: str = None, description: str = None, channelurl: str = 'https://studio.youtube.com/', thumbnail: str = None, tags: str = None, monetization: bool = False, authcycle: bool = True, cyclestop: int = 5):
     """
     Automates uploading a video to YouTube.
     """
     if image_path is None:
         image_path = os.path.join(os.path.dirname(__file__), 'uploadyt')
 
-    webbrowser.open(channelurl)
+    print(image_path)
+
+    if not authcycle:
+        webbrowser.open(channelurl)
+    else:
+        # Loop through the specified number of auth attempts
+        for auth_num in range(cyclestop):
+            webbrowser.open(f"{channelurl}?authuser={auth_num}")
+            
+            # Check if we landed on the dashboard or the 'oops' page
+            result = optimiseWait(['oops', 'oops2','channeldashboard'], clicks=0, autopath=image_path)
+            
+            # If we found the dashboard, stop looking
+            if result.get('image') == 'channeldashboard':
+                break
+            else:
+                pyautogui.hotkey('ctrl','w')
+        else:
+            # This block runs only if the loop completes without hitting 'break'
+            raise Exception(f"Could not find a valid YouTube channel after {cyclestop} attempts.")
+
 
     optimiseWait(['create','create2'], autopath=image_path)
     optimiseWait(['uploadvids','uploadvids2'], autopath=image_path)
