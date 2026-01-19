@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="upload-socials",
-    version="1.1.0",
+    version="1.1.1",
     author="AMAMazing",
     author_email="alexmalone489@gmail.com",
     description="A Python library to automate video uploads to YouTube.",
