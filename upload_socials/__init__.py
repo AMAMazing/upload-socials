@@ -2,10 +2,11 @@ import os
 from time import sleep
 import webbrowser
 import pyautogui
+import pyperclip  # <--- NEW IMPORT ADDED HERE
 from optimisewait import optimiseWait
 import smartpaste
 
-def upload_youtube(filepath: str, title: str, image_path: str = None, description: str = None, channelurl: str = 'https://studio.youtube.com/', thumbnail: str = None, tags: str = None, monetization: bool = False, authcycle: bool = True, cyclestop: int = 5):
+def upload_youtube(filepath: str, title: str, image_path: str = None, description: str = None, channelurl: str = 'https://studio.youtube.com/', thumbnail: str = None, tags: str = None, monetization: bool = False, authcycle: bool = True, cyclestop: int = 5, copy_url: bool = False):
     """
     Automates uploading a video to YouTube.
     """
@@ -39,36 +40,38 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
     optimiseWait(['select','select2'], autopath=image_path)
     optimiseWait('filename', clicks=0, autopath=image_path)
     
-    # FIX: Call the module directly
     smartpaste(filepath)
     
     pyautogui.press('enter')
     optimiseWait('title', yoff=10, clicks=0, autopath=image_path)
     pyautogui.hotkey('ctrl', 'a')
 
-    # FIX: Call the module directly
     smartpaste(title)
+
+    # --- NEW URL LOGIC START ---
+    video_link = None # Default state if we don't want to copy the URL
     
+    if copy_url:
+        optimiseWait('urlcopy', autopath=image_path) # Clicks the copy button
+        sleep(1) # Give the system a second to process the copy action
+        video_link = pyperclip.paste() # <--- GRABS THE CLIPBOARD CONTENTS!
+    # --- NEW URL LOGIC END --- 
+
     if thumbnail:
         optimiseWait(['thumbnail','thumbnail2'], autopath=image_path)
         optimiseWait('filename', clicks=0, autopath=image_path)
-        
-        # FIX: Call the module directly
         smartpaste(thumbnail)
-        
         pyautogui.press('enter')
+    
     sleep(1)
+    
     if description:
         optimiseWait('tell', autopath=image_path)
-        
-        # FIX: Call the module directly
         smartpaste(description)
 
     if tags:
         optimiseWait('showmore', scrolltofind='pagedown', autopath=image_path)
         optimiseWait('tags', scrolltofind='pagedown', autopath=image_path)
-        
-        # FIX: Call the module directly
         smartpaste(tags)
 
     if monetization == True:
@@ -81,7 +84,6 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
         optimiseWait('monetizenone', scrolltofind='pagedown', autopath=image_path)
         optimiseWait('monetizesubmit', autopath=image_path)
         
-
     for i in range(0, 3):
         sleep(1)
         optimiseWait('next', autopath=image_path)
@@ -97,3 +99,24 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
     optimiseWait('processing',autopath=image_path,clicks=0)
 
     pyautogui.hotkey('ctrl','w')
+    
+    return video_link
+
+
+# --- TESTING BLOCK ---
+if __name__ == '__main__':
+    print("Starting YouTube Upload Test...")
+    
+    # Notice we are capturing the output in 'my_new_video_url'
+    my_new_video_url = upload_youtube(
+        filepath=r"C:/dummy/path/video.mp4",
+        title="Test Upload", 
+        authcycle=False, # Turned off for a faster test
+        copy_url=True    # Triggering the new logic
+    )
+    
+    print("\n--- Test Results ---")
+    if my_new_video_url:
+        print(f"Success! The captured URL is: {my_new_video_url}")
+    else:
+        print("No URL returned (copy_url was likely False).")
