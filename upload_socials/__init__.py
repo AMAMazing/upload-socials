@@ -35,15 +35,15 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
             raise Exception(f"Could not find a valid YouTube channel after {cyclestop} attempts.")
 
 
-    optimiseWait(['create','create2'], autopath=image_path)
-    optimiseWait(['uploadvids','uploadvids2'], autopath=image_path)
-    optimiseWait(['select','select2'], autopath=image_path)
+    optimiseWait(['create','create2','createnew'], autopath=image_path)
+    optimiseWait(['uploadvids','uploadvids2','uploadnew'], autopath=image_path)
+    optimiseWait(['select','select2','selectnew'], autopath=image_path)
     optimiseWait('filename', clicks=0, autopath=image_path)
     
     smartpaste(filepath)
     
     pyautogui.press('enter')
-    optimiseWait('title', yoff=10, clicks=0, autopath=image_path)
+    optimiseWait(['title','titlenew'], yoff=10, clicks=0, autopath=image_path)
     pyautogui.hotkey('ctrl', 'a')
 
     smartpaste(title)
@@ -52,13 +52,13 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
     video_link = None # Default state if we don't want to copy the URL
     
     if copy_url:
-        optimiseWait('urlcopy', autopath=image_path) # Clicks the copy button
+        optimiseWait(['urlcopy','urlcopynew'], autopath=image_path) # Clicks the copy button
         sleep(1) # Give the system a second to process the copy action
         video_link = pyperclip.paste() # <--- GRABS THE CLIPBOARD CONTENTS!
     # --- NEW URL LOGIC END --- 
 
     if thumbnail:
-        optimiseWait(['thumbnail','thumbnail2'], autopath=image_path)
+        optimiseWait(['thumbnail','thumbnail2','thumbnailnew'], autopath=image_path)
         optimiseWait('filename', clicks=0, autopath=image_path)
         smartpaste(thumbnail)
         pyautogui.press('enter')
@@ -66,37 +66,37 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
     sleep(1)
     
     if description:
-        optimiseWait('tell', autopath=image_path)
+        optimiseWait(['tell','tellnew'], autopath=image_path)
         smartpaste(description)
 
     if tags:
-        optimiseWait('showmore', scrolltofind='pagedown', autopath=image_path)
-        optimiseWait('tags', scrolltofind='pagedown', autopath=image_path)
+        optimiseWait(['showmore','showmorenew'], scrolltofind='pagedown', autopath=image_path)
+        optimiseWait(['tags','tagnew'], scrolltofind='pagedown', autopath=image_path)
         smartpaste(tags)
 
     if monetization == True:
-        optimiseWait('next', autopath=image_path)
+        optimiseWait(['next','nextnew'], autopath=image_path)
         optimiseWait('monetizeselect', autopath=image_path)
         optimiseWait('monetizeon', autopath=image_path)
         optimiseWait('monetizedone', autopath=image_path)
-        optimiseWait('next', autopath=image_path)
+        optimiseWait(['next','nextnew'], autopath=image_path)
         optimiseWait('monetizeactive', autopath=image_path)
         optimiseWait('monetizenone', scrolltofind='pagedown', autopath=image_path)
         optimiseWait('monetizesubmit', autopath=image_path)
         
     for i in range(0, 3):
         sleep(1)
-        optimiseWait('next', autopath=image_path)
+        optimiseWait(['next','nextnew'], autopath=image_path)
 
     if monetization == True:
         optimiseWait('monetizepublic', autopath=image_path)
 
-    optimiseWait('publish', autopath=image_path)
+    optimiseWait(['publish'], autopath=image_path)
 
     if monetization == True:
         optimiseWait('publish2', autopath=image_path)
 
-    optimiseWait('processing',autopath=image_path,clicks=0)
+    optimiseWait(['processing','publishnew'],autopath=image_path,clicks=0)
 
     pyautogui.hotkey('ctrl','w')
     
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     
     # Notice we are capturing the output in 'my_new_video_url'
     my_new_video_url = upload_youtube(
-        filepath=r"C:/dummy/path/video.mp4",
+        filepath=r"D:\DailyCodeYT\processing\final_presentation.mp4",
         title="Test Upload", 
         authcycle=False, # Turned off for a faster test
         copy_url=True    # Triggering the new logic
