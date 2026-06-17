@@ -72,7 +72,7 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
     if tags:
         optimiseWait(['showmore','showmorenew'], scrolltofind='pagedown', autopath=image_path)
         optimiseWait(['tags','tagnew'], scrolltofind='pagedown', autopath=image_path)
-        smartpaste(tags)
+        smartpaste(tags[:500])
 
     if monetization == True:
         optimiseWait(['next','nextnew'], autopath=image_path)
