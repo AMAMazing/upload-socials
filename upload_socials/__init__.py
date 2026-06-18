@@ -72,7 +72,7 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
     if tags:
         optimiseWait(['showmore','showmorenew'], scrolltofind='pagedown', autopath=image_path)
         optimiseWait(['tags','tagnew'], scrolltofind='pagedown', autopath=image_path)
-        smartpaste(tags[:500])
+        smartpaste(tags[:450])
 
     if monetization == True:
         optimiseWait(['next','nextnew'], autopath=image_path)
@@ -96,7 +96,7 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
     if monetization == True:
         optimiseWait('publish2', autopath=image_path)
 
-    optimiseWait(['processing','publishnew'],autopath=image_path,clicks=0)
+    optimiseWait(['processing','publishnew','publishedold'],autopath=image_path,clicks=0)
 
     pyautogui.hotkey('ctrl','w')
     
