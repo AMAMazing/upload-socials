@@ -26,7 +26,7 @@ def upload_youtube(filepath: str, title: str, image_path: str = None, descriptio
             result = optimiseWait(['oops', 'oops2','channeldashboard','channeldashboardnew'], clicks=0, autopath=image_path)
             
             # If we found the dashboard, stop looking
-            if result.get('image') == 'channeldashboard':
+            if result.get('image') == 'channeldashboard' or result.get('image') == 'channeldashboardnew':
                 break
             else:
                 pyautogui.hotkey('ctrl','w')
